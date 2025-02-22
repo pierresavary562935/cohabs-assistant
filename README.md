@@ -28,16 +28,11 @@ cd my-project
 
 2. Installe les dépendances :
 
-#### Front-end
-```bash
-cd front-end
-npm install
-```
 
-#### Back-end
 ```bash
-cd ../back-end
 npm install
+npm run init
+npm start
 ```
 
 ## 🔐 Configuration

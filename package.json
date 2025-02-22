@@ -1,0 +1,15 @@
+{
+  "name": "cohabs-assistant",
+  "version": "1.0.0",
+  "scripts": {
+    "init": "concurrently \"npm run init:front\" \"npm run init:back\"",
+    "init:front": "cd react-frontend && npm install",
+    "init:back": "cd express-backend && npm install",
+    "start": "concurrently \"npm run start:front\" \"npm run start:back\"",
+    "start:front": "cd react-frontend && PORT=3001 npm start",
+    "start:back": "cd express-backend && node index.js"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  }
+}

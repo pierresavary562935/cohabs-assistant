@@ -1,0 +1,11 @@
+/express-backend/node_modules
+/express-backend/.env
+
+/node-backend/node_modules
+/node-backend/.env
+
+/react-frontend/node_modules
+/react-frontend/.env
+
+/node_modules
+node_modules
