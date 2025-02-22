@@ -6,7 +6,6 @@ import {
   Panel,
   Message,
   Loader,
-  Divider,
   Stack,
   Avatar,
   FlexboxGrid,
