@@ -22,7 +22,7 @@ cohabs-assistant/
 ### ⚙️ Installation
 1. Clone le repo :
 ```bash
-git clone https://github.com/user/repo.git
+git clone [https://github.com/user/repo.git](https://github.com/pierresavary562935/cohabs-assistant.git)
 cd my-project
 ```
 
