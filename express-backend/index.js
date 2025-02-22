@@ -2,12 +2,25 @@ const express = require("express");
 const axios = require("axios");
 require("dotenv").config();
 
-const cors = require("cors");
-app.use(cors({ origin: "https://cohabs-assistant.vercel.app/" }));
-
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
+const allowedOrigins = [
+  "https://cohabs-assistant.vercel.app", // Front-end en production
+  "http://localhost:3000", // Front-end en développement
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Non autorisé par CORS"));
+      }
+    },
+  })
+);
 // pour parser les requêtes JSON
 app.use(express.json());
 
