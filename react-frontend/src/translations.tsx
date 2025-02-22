@@ -1,0 +1,65 @@
+// translations.ts
+
+const translations = {
+    fr: {
+        serverStatus: 'Statut du serveur',
+        startChat: 'Commencez à discuter en envoyant un message !',
+        loadingResponse: 'Chargement de la réponse...',
+        enterMessage: 'Écris ton message ici...',
+        send: 'Envoyer',
+        sending: 'Envoi en cours...',
+        availabilitiesTitle: 'Voici les disponibilités actuelles:',
+        availabilityError: '❌ Erreur lors de la récupération des disponibilités.',
+        unknownCommand: '⚠️ Commande spéciale inconnue.',
+        needMoreInfo: 'Demande moi si tu as besoin de plus d\'informations !',
+        house: 'Maison',
+        availableRooms: 'Chambres disponibles',
+        city: 'Ville',
+        address: 'Adresse',
+        serverError: 'Erreur lors de la récupération du statut.',
+        availabilityFetchError: 'Erreur lors de la récupération des disponibilités.',
+        emptyPrompt: 'Veuillez entrer un message.',
+    },
+
+    en: {
+        serverStatus: 'Server Status',
+        startChat: 'Start chatting by sending a message!',
+        loadingResponse: 'Loading response...',
+        enterMessage: 'Write your message here...',
+        send: 'Send',
+        sending: 'Sending...',
+        availabilitiesTitle: 'Here are the current availabilities:',
+        availabilityError: '❌ Error while fetching availabilities.',
+        unknownCommand: '⚠️ Unknown special command.',
+        needMoreInfo: 'Ask me if you need more information!',
+        house: 'House',
+        availableRooms: 'Available rooms',
+        city: 'City',
+        address: 'Address',
+        serverError: 'Error fetching server status.',
+        availabilityFetchError: 'Error while fetching availabilities.',
+        emptyPrompt: 'Please enter a message.',
+    },
+
+    nl: {
+        serverStatus: 'Serverstatus',
+        startChat: 'Begin met chatten door een bericht te sturen!',
+        loadingResponse: 'Antwoord laden...',
+        enterMessage: 'Schrijf hier je bericht...',
+        send: 'Verzenden',
+        sending: 'Bezig met verzenden...',
+        availabilitiesTitle: 'Hier zijn de huidige beschikbaarheden:',
+        availabilityError: '❌ Fout bij het ophalen van beschikbaarheden.',
+        unknownCommand: '⚠️ Onbekende speciale opdracht.',
+        needMoreInfo: 'Vraag me als je meer informatie nodig hebt!',
+        house: 'Huis',
+        availableRooms: 'Beschikbare kamers',
+        city: 'Stad',
+        address: 'Adres',
+        serverError: 'Fout bij het ophalen van de serverstatus.',
+        availabilityFetchError: 'Fout bij het ophalen van beschikbaarheden.',
+        emptyPrompt: 'Voer een bericht in.',
+    }
+};
+
+export default translations;
