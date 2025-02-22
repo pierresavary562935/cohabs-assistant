@@ -2,8 +2,6 @@
 
 Ce projet est une application full-stack combinant un **front-end React** et un **back-end Node.js/Express**. L'application intègre l'API **OpenAI** pour fournir des réponses basées sur l'historique de conversation et les disponibilités, tout en prenant en charge plusieurs langues (**français**, **anglais**, **néerlandais**).
 
----
-
 ## 📁 Structure du projet
 
 ```bash
@@ -12,6 +10,7 @@ cohabs-assistant/
 ├── node-backend/        # API Node.js
 ├── express-backend/        # API Express
 └── README.md
+```
 
 🚀 Démarrage rapide
 
