@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import {
   Button,
   Input,
@@ -11,6 +10,8 @@ import {
   FlexboxGrid,
   RadioGroup,
   Radio,
+  CustomProvider,
+  IconButton,
 } from 'rsuite';
 import Gear from '@rsuite/icons/Gear';
 import { toast, ToastContainer } from 'react-toastify';
@@ -18,6 +19,9 @@ import 'rsuite/dist/rsuite.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import translations from './translations';
 import ApiKeyComponent from './components/ApiKeyComponent';
+import { fetchAvailabilities, fetchOpenAi, fetchServerStatus } from './api/express-server';
+import { MdOutlineNightlight, MdOutlineLightMode } from 'react-icons/md';
+import Icon from '@rsuite/icons/esm/Icon';
 
 type Language = 'fr' | 'en' | 'nl';
 interface Availability {
@@ -35,6 +39,7 @@ const App: React.FC = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [language, setLanguage] = useState<Language>('fr');
   const [availabilities, setAvailabilities] = useState<Availability[]>([]);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const t = translations[language];
 
   // API key vars
@@ -50,12 +55,21 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('fetching server status and availabilities');
-    fetchServerStatus();
-    fetchAvailabilities();
-
+    initializeData();
     setUserApiKey(localStorage.getItem('userApiKey') || '');
   }, []);
+
+  const initializeData = async () => {
+    try {
+      const status = await fetchServerStatus();
+      setServerStatus(status);
+
+      const availabilityData = await fetchAvailabilities();
+      setAvailabilities(availabilityData);
+    } catch (err) {
+      toast.error(t.serverError, toastOptions);
+    }
+  };
 
   useEffect(() => {
     // auto scroll to bottom
@@ -63,59 +77,6 @@ const App: React.FC = () => {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [chatHistory]);
-
-  // call server status
-  const fetchServerStatus = async () => {
-    try {
-      const response = await axios.get('/api/status');
-      setServerStatus(response.data.message);
-    } catch (err) {
-      setServerStatus(t.serverError);
-    }
-  };
-
-  // call openai
-  const fetchOpenAi = async (user_prompt: string) => {
-    try {
-      const languagePrompts: Record<Language, string> = {
-        fr: `Voici l'historique de la conversation:\n${chatHistory.map((msg) => `${msg.role === 'user' ? 'Utilisateur' : 'Assistant'}: ${msg.content}`).join('\n')}.
-            Voici les disponibilités actuelles:\n${availabilities.map((availability) => '🏠 Maison: ' + availability.houseName + '\n🛏️ Chambres disponibles: ' + availability.availableRooms + 'Ville: ' + availability.city + 'Adresse: ' + availability.address).join('\n')}.
-            \n\nMessage utilisateur: ${user_prompt}\n\nRéponse:`,
-        en: `Here is the conversation history:\n${chatHistory.map((msg) => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`).join('\n')}.
-            Here are the current availabilities:\n${availabilities.map((availability) => '🏠 House: ' + availability.houseName + '\n🛏️ Available rooms: ' + availability.availableRooms + 'City: ' + availability.city + 'Address: ' + availability.address).join('\n')}.
-            \n\nUser message: ${user_prompt}\n\nResponse:`,
-        nl: `Hier is de gespreksgeschiedenis:\n${chatHistory.map((msg) => `${msg.role === 'user' ? 'Gebruiker' : 'Assistent'}: ${msg.content}`).join('\n')}.
-            Hier zijn de huidige beschikbaarheden:\n${availabilities.map((availability) => '🏠 Huis: ' + availability.houseName + '\n🛏️ Beschikbare kamers: ' + availability.availableRooms + 'Stad: ' + availability.city + 'Adres: ' + availability.address).join('\n')}.
-            \n\nGebruikersbericht: ${user_prompt}\n\nReactie:`,
-      };
-
-      const finalPrompt = languagePrompts[language];
-
-      const response = await axios.post(
-        '/api/openai',
-        { prompt: finalPrompt },
-        {
-          headers: {
-            'Authorization': `Bearer ${userApiKey}`,
-          },
-        }
-      );
-      return response.data.response;
-    } catch (err) {
-      return t.serverError;
-    }
-  };
-
-  const fetchAvailabilities = async () => {
-    try {
-      const response = await axios.get('/api/availabilities');
-      const availabilities = response.data;
-      setAvailabilities(availabilities);
-    }
-    catch (err) {
-      toast.error(t.availabilityError, toastOptions);
-    }
-  };
 
   // handle special commands
   const handleSpecialCommand = async (command: string) => {
@@ -176,83 +137,98 @@ const App: React.FC = () => {
       return;
     }
 
-    const responseText = await fetchOpenAi(prompt);
-    setChatHistory([...newChatHistory, { role: 'assistant', content: responseText }]);
-
-
-    setLoading(false);
+    try {
+      const responseText = await fetchOpenAi(prompt, newChatHistory, availabilities, language, userApiKey);
+      setChatHistory([...newChatHistory, { role: 'assistant', content: responseText }]);
+    } catch (err) {
+      toast.error(t.serverError, toastOptions);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto', padding: 20 }}>
-      <ToastContainer position="top-center" theme="dark" />
 
-      {/* server status */}
-      <Panel bordered style={{ marginBottom: 20 }}>
-        <h1>Cohabs Assistant</h1>
-        <FlexboxGrid justify="space-between">
-          <FlexboxGrid.Item>
-            <p>{t.serverStatus}: {serverStatus}</p>
-          </FlexboxGrid.Item>
-          <FlexboxGrid.Item>
-            <RadioGroup inline appearance="picker" value={language} onChange={(value) => setLanguage(value as Language)}>
-              <Radio value="fr">Français</Radio>
-              <Radio value="en">English</Radio>
-              <Radio value="nl">Nederlands</Radio>
-            </RadioGroup>
-            <Button size="sm" appearance="primary" onClick={() => setShowApiKeyModal(true)} style={{ marginLeft: 10 }}>
-              <Gear style={{ marginRight: 5 }} /> API Key
-            </Button>
-          </FlexboxGrid.Item>
-        </FlexboxGrid>
-      </Panel>
+    <CustomProvider theme={theme}>
+      <div style={{ maxWidth: 800, margin: '0 auto', padding: 20 }}>
+        <ToastContainer position="top-center" theme="dark" />
 
-      {/* chat */}
-      <Panel bordered style={{ height: 400, overflowY: 'auto', marginBottom: 20 }} ref={chatContainerRef}>
-        {chatHistory.length === 0 ? (
-          <Message type="info">{t.startChat}</Message>
-        ) : (
-          chatHistory.map((msg, index) => (
-            <FlexboxGrid key={index} justify={msg.role === 'user' ? 'end' : 'start'} style={{ marginBottom: 10 }}>
-              <FlexboxGrid.Item colspan={24}>
-                <Stack spacing={10} style={{ justifyContent: msg.role === 'user' ? 'end' : 'start' }}>
-                  {msg.role === 'assistant' && <Avatar circle size="sm" alt="AI" />}
-                  <Message type={msg.role === 'user' ? 'info' as any : 'success' as any}>
-                    {msg.content.split('\n').map((line, index) => <p key={index}>{line}</p>)}
-                  </Message>
-                  {msg.role === 'user' && <Avatar circle size="sm" alt="U" />}
-                </Stack>
+        {/* server status */}
+        <Panel bordered style={{ marginBottom: 20 }}>
+          <h1>Cohabs Assistant</h1>
+          <FlexboxGrid justify="space-between">
+            <FlexboxGrid.Item>
+              <p>{t.serverStatus}: {serverStatus}</p>
+            </FlexboxGrid.Item>
+            <FlexboxGrid.Item>
+              <RadioGroup inline appearance="picker" value={language} onChange={(value) => setLanguage(value as Language)}>
+                <Radio value="fr">Français</Radio>
+                <Radio value="en">English</Radio>
+                <Radio value="nl">Nederlands</Radio>
+              </RadioGroup>
+              <Button size="sm" appearance="primary" onClick={() => setShowApiKeyModal(true)} style={{ marginLeft: 10 }}>
+                <Gear style={{ marginRight: 5 }} /> API Key
+              </Button>
+              <IconButton
+                icon={
+                  <Icon
+                    as={theme === 'light' ? MdOutlineNightlight as any : MdOutlineLightMode as any}
+                    style={{ fontSize: 20 }}
+                  />
+                }
+                onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+              />
+            </FlexboxGrid.Item>
+          </FlexboxGrid>
+        </Panel>
 
-              </FlexboxGrid.Item>
-            </FlexboxGrid>
-          ))
-        )}
+        {/* chat */}
+        <Panel bordered style={{ height: 400, overflowY: 'auto', marginBottom: 20 }} ref={chatContainerRef}>
+          {chatHistory.length === 0 ? (
+            <Message type="info">{t.startChat}</Message>
+          ) : (
+            chatHistory.map((msg, index) => (
+              <FlexboxGrid key={index} justify={msg.role === 'user' ? 'end' : 'start'} style={{ marginBottom: 10 }}>
+                <FlexboxGrid.Item colspan={24}>
+                  <Stack spacing={10} style={{ justifyContent: msg.role === 'user' ? 'end' : 'start' }}>
+                    {msg.role === 'assistant' && <Avatar circle size="sm" alt="AI" />}
+                    <Message type={msg.role === 'user' ? 'info' as any : 'success' as any}>
+                      {msg.content.split('\n').map((line, index) => <p key={index}>{line}</p>)}
+                    </Message>
+                    {msg.role === 'user' && <Avatar circle size="sm" alt="U" />}
+                  </Stack>
 
-        {loading && (
-          <Stack justifyContent="center" style={{ margin: '20px 0' }}>
-            <Loader size="md" content={t.loadingResponse} />
-          </Stack>
-        )}
+                </FlexboxGrid.Item>
+              </FlexboxGrid>
+            ))
+          )}
 
-      </Panel>
+          {loading && (
+            <Stack justifyContent="center" style={{ margin: '20px 0' }}>
+              <Loader size="md" content={t.loadingResponse} />
+            </Stack>
+          )}
 
-      {/* textarea + btn */}
-      <Panel bordered style={{ marginBottom: 20 }}>
-        <Input
-          as="textarea"
-          rows={3}
-          placeholder={t.enterMessage}
-          value={prompt}
-          onChange={(value) => setPrompt(value)}
-          style={{ marginBottom: 10 }}
-        />
-        <Button appearance="primary" loading={loading} block onClick={handleButtonClick}>
-          {loading ? t.sending : t.send}
-        </Button>
-      </Panel>
+        </Panel>
 
-      <ApiKeyComponent setShow={setShowApiKeyModal} show={showApiKeyModal} userApiKey={userApiKey} setUserApiKey={setUserApiKey} />
-    </div>
+        {/* textarea + btn */}
+        <Panel bordered style={{ marginBottom: 20 }}>
+          <Input
+            as="textarea"
+            rows={3}
+            placeholder={t.enterMessage}
+            value={prompt}
+            onChange={(value) => setPrompt(value)}
+            style={{ marginBottom: 10 }}
+          />
+          <Button appearance="primary" loading={loading} block onClick={handleButtonClick}>
+            {loading ? t.sending : t.send}
+          </Button>
+        </Panel>
+
+        <ApiKeyComponent setShow={setShowApiKeyModal} show={showApiKeyModal} userApiKey={userApiKey} setUserApiKey={setUserApiKey} />
+      </div>
+    </CustomProvider>
   );
 };
 

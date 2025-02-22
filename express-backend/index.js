@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3001;
 
 const allowedOrigins = [
   "https://cohabs-assistant.vercel.app", // Front-end en production
-  "http://localhost:3000", // Front-end en développement
+  // "http://localhost:3000", // Front-end en développement
 ];
 
 app.use(
