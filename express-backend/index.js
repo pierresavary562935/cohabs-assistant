@@ -34,10 +34,10 @@ app.post("/api/openai", async (req, res) => {
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o",
         messages: [
           {
-            role: "system",
+            role: "developer",
             content:
               "You are a friendly Cohabs assistant. Respond briefly and helpfully to user messages. Always end with a short compliment about both Cohabs and the user.",
           },
