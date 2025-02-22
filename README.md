@@ -6,61 +6,69 @@ Ce projet est une application full-stack combinant un **front-end React** et un 
 
 ```bash
 cohabs-assistant/
-├── express-backend/       # Application React
+├── express-backend/     # Application React
 ├── node-backend/        # API Node.js
-├── express-backend/        # API Express
+├── express-backend/     # API Express
 └── README.md
 ```
 
-🚀 Démarrage rapide
+## 🚀 Démarrage rapide
 
-📦 Prérequis
-	•	Node.js (v16+ recommandé)
-	•	npm ou yarn
-	•	Clé API OpenAI
+### 📦 Prérequis
+- Node.js (v16+ recommandé)
+- npm ou yarn
+- Clé API OpenAI
 
-⚙️ Installation
-	1.	Clone le repo :
-
-git clone https://github.com/TON-UTILISATEUR/TON-REPO.git
+### ⚙️ Installation
+1. Clone le repo :
+```bash
+git clone https://github.com/user/repo.git
 cd my-project
+```
 
-	2.	Installe les dépendances :
+2. Installe les dépendances :
 
-# Front-end
+#### Front-end
+```bash
 cd front-end
 npm install
+```
 
-# Back-end
+#### Back-end
+```bash
 cd ../back-end
 npm install
+```
 
-🔐 Configuration
-	1.	Ajoute tes clés API dans un fichier .env dans le dossier back-end/ :
-
+## 🔐 Configuration
+1. Ajoute tes clés API dans un fichier .env dans le dossier back-end/ :
+```bash
 OPENAI_API_KEY=ta_cle_api_openai
+```
 
-🖥️ Lancer le projet en local
-	1.	Back-end (API Express ou Node.js) :
-
+## 🖥️ Lancer le projet en local
+1. Back-end (API Express ou Node.js) :
+```bash
 cd back-end
 node index.js
-# Serveur sur http://localhost:5000
+# Serveur sur http://localhost:3000
+```
 
-	2.	Front-end (React) :
-
+2. Front-end (React) :
+```bash
 cd ../react-frontend
 npm start
-then type 'y' to accecpt changing port
+#then type 'y' to accept changing port
 # Application sur http://localhost:3001
+```
 
-🧩 Fonctionnalités principales
+## 🧩 Fonctionnalités principales
 	•	💬 Intégration OpenAI : Génère des réponses dynamiques basées sur l’historique de conversation et les disponibilités.
 	•	🌐 Support multilingue : Français 🇫🇷, Anglais 🇬🇧, Néerlandais 🇳🇱.
 	•	🏠 Gestion des disponibilités : Affiche les maisons et chambres disponibles.
 	•	⚡ API Express : Communication sécurisée entre le front et OpenAI.
 
-🛠️ Technologies utilisées
+## 🛠️ Technologies utilisées
 	•	Front-end : React, TypeScript
 	•	Back-end : Node.js, Express
 	•	API : OpenAI GPT
@@ -68,9 +76,9 @@ then type 'y' to accecpt changing port
 	•	Gestion d’état : Context API / Redux (selon ton choix)
 	•	Styles : Tailwind CSS / CSS Modules
 
-🧑‍💻 Auteur
+## 🧑‍💻 Auteur
 	•	Pierre Savary
 
-📄 License
+## 📄 License
 
 Ce projet est sous licence MIT – Voir le fichier LICENSE.
