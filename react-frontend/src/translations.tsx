@@ -1,5 +1,3 @@
-// translations.ts
-
 const translations = {
     fr: {
         serverStatus: 'Statut du serveur',
@@ -20,6 +18,8 @@ const translations = {
         availabilityFetchError: 'Erreur lors de la récupération des disponibilités.',
         emptyPrompt: 'Veuillez entrer un message.',
         noApiKeys: 'Renseignez votre clé API OpenAI avant de commencer.',
+        offline: 'Déconnecté',
+        online: 'Connecté',
     },
 
     en: {
@@ -41,6 +41,8 @@ const translations = {
         availabilityFetchError: 'Error while fetching availabilities.',
         emptyPrompt: 'Please enter a message.',
         noApiKeys: 'Please provide your OpenAI API key before starting.',
+        offline: 'Offline',
+        online: 'Online',
     },
 
     nl: {
@@ -62,6 +64,8 @@ const translations = {
         availabilityFetchError: 'Fout bij het ophalen van beschikbaarheden.',
         emptyPrompt: 'Voer een bericht in.',
         noApiKeys: 'Geef uw OpenAI API-sleutel op voordat u begint.',
+        offline: 'Offline',
+        online: 'Online',
     }
 };
 

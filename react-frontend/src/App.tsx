@@ -12,6 +12,7 @@ import {
   Radio,
   CustomProvider,
   IconButton,
+  Tag,
 } from 'rsuite';
 import Gear from '@rsuite/icons/Gear';
 import { toast, ToastContainer } from 'react-toastify';
@@ -152,7 +153,7 @@ const App: React.FC = () => {
           <FlexboxGrid justify="space-between" align='top' style={{ padding: 0 }}>
             <FlexboxGrid.Item>
               <h1>Cohabs Assistant</h1>
-              <p>{t.serverStatus}: {serverStatus}</p>
+              <p>{t.serverStatus}: {serverStatus === '' ? <Tag color='red'>{t.offline}</Tag> : <Tag color='green'>{t.online}</Tag>}</p>
             </FlexboxGrid.Item>
             <FlexboxGrid.Item>
               <RadioGroup inline appearance="picker" value={language} onChange={(value) => setLanguage(value as Language)}>
