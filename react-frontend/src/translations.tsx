@@ -19,6 +19,7 @@ const translations = {
         serverError: 'Erreur lors de la récupération du statut.',
         availabilityFetchError: 'Erreur lors de la récupération des disponibilités.',
         emptyPrompt: 'Veuillez entrer un message.',
+        noApiKeys: 'Renseignez votre clé API OpenAI avant de commencer.',
     },
 
     en: {
@@ -39,6 +40,7 @@ const translations = {
         serverError: 'Error fetching server status.',
         availabilityFetchError: 'Error while fetching availabilities.',
         emptyPrompt: 'Please enter a message.',
+        noApiKeys: 'Please provide your OpenAI API key before starting.',
     },
 
     nl: {
@@ -59,6 +61,7 @@ const translations = {
         serverError: 'Fout bij het ophalen van de serverstatus.',
         availabilityFetchError: 'Fout bij het ophalen van beschikbaarheden.',
         emptyPrompt: 'Voer een bericht in.',
+        noApiKeys: 'Geef uw OpenAI API-sleutel op voordat u begint.',
     }
 };
 

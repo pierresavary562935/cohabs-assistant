@@ -2,8 +2,11 @@ const express = require("express");
 const axios = require("axios");
 require("dotenv").config();
 
+const cors = require("cors");
+app.use(cors({ origin: "https://cohabs-assistant.vercel.app/" }));
+
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 
 // pour parser les requêtes JSON
 app.use(express.json());
@@ -24,6 +27,7 @@ app.get("/api/availabilities", (req, res) => {
 
 // call OpenAI
 app.post("/api/openai", async (req, res) => {
+  const userApiKey = req.headers.authorization?.split(" ")[1]; // get api key from header
   const { prompt } = req.body;
 
   if (!prompt) {
@@ -34,10 +38,10 @@ app.post("/api/openai", async (req, res) => {
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-4o",
+        model: "gpt-3.5-turbo",
         messages: [
           {
-            role: "developer",
+            role: "system",
             content:
               "You are a friendly Cohabs assistant. Respond briefly and helpfully to user messages. Always end with a short compliment about both Cohabs and the user.",
           },
@@ -47,7 +51,7 @@ app.post("/api/openai", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          Authorization: `Bearer ${userApiKey}`,
         },
       }
     );

@@ -12,10 +12,12 @@ import {
   RadioGroup,
   Radio,
 } from 'rsuite';
+import Gear from '@rsuite/icons/Gear';
 import { toast, ToastContainer } from 'react-toastify';
 import 'rsuite/dist/rsuite.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import translations from './translations';
+import ApiKeyComponent from './components/ApiKeyComponent';
 
 type Language = 'fr' | 'en' | 'nl';
 interface Availability {
@@ -35,6 +37,10 @@ const App: React.FC = () => {
   const [availabilities, setAvailabilities] = useState<Availability[]>([]);
   const t = translations[language];
 
+  // API key vars
+  const [userApiKey, setUserApiKey] = useState<string>('');
+  const [showApiKeyModal, setShowApiKeyModal] = useState<boolean>(false);
+
   const toastOptions = {
     autoClose: 2000,
     hideProgressBar: false,
@@ -44,8 +50,11 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log('fetching server status and availabilities');
     fetchServerStatus();
     fetchAvailabilities();
+
+    setUserApiKey(localStorage.getItem('userApiKey') || '');
   }, []);
 
   useEffect(() => {
@@ -82,7 +91,15 @@ const App: React.FC = () => {
 
       const finalPrompt = languagePrompts[language];
 
-      const response = await axios.post('/api/openai', { prompt: finalPrompt });
+      const response = await axios.post(
+        '/api/openai',
+        { prompt: finalPrompt },
+        {
+          headers: {
+            'Authorization': `Bearer ${userApiKey}`,
+          },
+        }
+      );
       return response.data.response;
     } catch (err) {
       return t.serverError;
@@ -138,6 +155,14 @@ const App: React.FC = () => {
       setLoading(false);
       return;
     }
+
+    if (!userApiKey) {
+      toast.error(t.noApiKeys, toastOptions);
+      setShowApiKeyModal(true);
+      setLoading(false);
+      return;
+    }
+
     setPrompt('');
 
     const newChatHistory = [...chatHistory, { role: 'user', content: prompt }];
@@ -175,6 +200,9 @@ const App: React.FC = () => {
               <Radio value="en">English</Radio>
               <Radio value="nl">Nederlands</Radio>
             </RadioGroup>
+            <Button size="sm" appearance="primary" onClick={() => setShowApiKeyModal(true)} style={{ marginLeft: 10 }}>
+              <Gear style={{ marginRight: 5 }} /> API Key
+            </Button>
           </FlexboxGrid.Item>
         </FlexboxGrid>
       </Panel>
@@ -222,6 +250,8 @@ const App: React.FC = () => {
           {loading ? t.sending : t.send}
         </Button>
       </Panel>
+
+      <ApiKeyComponent setShow={setShowApiKeyModal} show={showApiKeyModal} userApiKey={userApiKey} setUserApiKey={setUserApiKey} />
     </div>
   );
 };
