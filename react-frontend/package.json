@@ -46,9 +46,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": {
-    "development": "http://localhost:3001"
-  },
   "devDependencies": {
     "rsuite": "^5.78.0"
   }
