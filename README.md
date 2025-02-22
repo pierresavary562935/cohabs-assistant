@@ -35,12 +35,6 @@ npm run init
 npm start
 ```
 
-## 🔐 Configuration
-1. Ajoute tes clés API dans un fichier .env dans le dossier back-end/ :
-```bash
-OPENAI_API_KEY=ta_cle_api_openai
-```
-
 ## 🖥️ Lancer le projet en local
 1. Back-end (API Express ou Node.js) :
 ```bash
