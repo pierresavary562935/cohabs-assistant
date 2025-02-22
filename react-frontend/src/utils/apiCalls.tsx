@@ -1,14 +1,7 @@
 // api/express-server.tsx
 
 import axios from 'axios';
-
-type Language = 'fr' | 'en' | 'nl';
-interface Availability {
-    houseName: string;
-    availableRooms: number;
-    city: string;
-    address: string;
-}
+import { Availability, Language } from './interfaces';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
@@ -45,13 +38,13 @@ export const fetchOpenAi = async (
     try {
         const languagePrompts: Record<Language, string> = {
             fr: `Voici l'historique de la conversation:\n${chatHistory.map((msg) => `${msg.role === 'user' ? 'Utilisateur' : 'Assistant'}: ${msg.content}`).join('\n')}.
-          Voici les disponibilités actuelles:\n${availabilities.map((availability) => '🏠 Maison: ' + availability.houseName + '\n🛏️ Chambres disponibles: ' + availability.availableRooms + '\nVille: ' + availability.city + '\nAdresse: ' + availability.address).join('\n')}.
+          Voici les disponibilités actuelles:\n${availabilities.map((availability) => '🏠 Maison: ' + availability.name + '\n🛏️ Chambres disponibles: ' + availability.unitCount + '/' + availability.roomsCount + '\nVille: ' + availability.city + '\nLocation à partir de: ' + availability.rentFrom + '€').join('\n')}.
           \n\nMessage utilisateur: ${user_prompt}\n\nRéponse:`,
             en: `Here is the conversation history:\n${chatHistory.map((msg) => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`).join('\n')}.
-          Here are the current availabilities:\n${availabilities.map((availability) => '🏠 House: ' + availability.houseName + '\n🛏️ Available rooms: ' + availability.availableRooms + '\nCity: ' + availability.city + '\nAddress: ' + availability.address).join('\n')}.
+          Here are the current availabilities:\n${availabilities.map((availability) => '🏠 House: ' + availability.name + '\n🛏️ Available rooms: ' + availability.unitCount + '/' + availability.roomsCount + '\nCity: ' + availability.city + '\nRent from: ' + availability.rentFrom + '€').join('\n')}.
           \n\nUser message: ${user_prompt}\n\nResponse:`,
             nl: `Hier is de gespreksgeschiedenis:\n${chatHistory.map((msg) => `${msg.role === 'user' ? 'Gebruiker' : 'Assistent'}: ${msg.content}`).join('\n')}.
-          Hier zijn de huidige beschikbaarheden:\n${availabilities.map((availability) => '🏠 Huis: ' + availability.houseName + '\n🛏️ Beschikbare kamers: ' + availability.availableRooms + '\nStad: ' + availability.city + '\nAdres: ' + availability.address).join('\n')}.
+          Hier zijn de huidige beschikbaarheden:\n${availabilities.map((availability) => '🏠 Huis: ' + availability.name + '\n🛏️ Beschikbare kamers: ' + availability.unitCount + '/' + availability.roomsCount + '\nStad: ' + availability.city + '\nHuur vanaf: ' + availability.rentFrom + '€').join('\n')}.\n
           \n\nGebruikersbericht: ${user_prompt}\n\nReactie:`,
         };
 

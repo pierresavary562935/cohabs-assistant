@@ -19,17 +19,11 @@ import 'rsuite/dist/rsuite.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import translations from './translations';
 import ApiKeyComponent from './components/ApiKeyComponent';
-import { fetchAvailabilities, fetchOpenAi, fetchServerStatus } from './api/express-server';
+import { fetchAvailabilities, fetchOpenAi, fetchServerStatus } from './utils/apiCalls';
 import { MdOutlineNightlight, MdOutlineLightMode } from 'react-icons/md';
 import Icon from '@rsuite/icons/esm/Icon';
-
-type Language = 'fr' | 'en' | 'nl';
-interface Availability {
-  houseName: string;
-  availableRooms: number;
-  city: string;
-  address: string;
-}
+import './style.css';
+import { Availability, Language } from './utils/interfaces';
 
 const App: React.FC = () => {
   const [prompt, setPrompt] = useState<string>('');
@@ -150,14 +144,14 @@ const App: React.FC = () => {
   return (
 
     <CustomProvider theme={theme}>
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: 20 }}>
+      <div style={{ maxWidth: 1000, minWidth: 400, margin: '0 auto', padding: 20 }}>
         <ToastContainer position="top-center" theme="dark" />
 
         {/* server status */}
-        <Panel bordered style={{ marginBottom: 20 }}>
-          <h1>Cohabs Assistant</h1>
-          <FlexboxGrid justify="space-between">
+        <Panel bordered style={{ marginBottom: 20, padding: 0 }}>
+          <FlexboxGrid justify="space-between" align='top' style={{ padding: 0 }}>
             <FlexboxGrid.Item>
+              <h1>Cohabs Assistant</h1>
               <p>{t.serverStatus}: {serverStatus}</p>
             </FlexboxGrid.Item>
             <FlexboxGrid.Item>
@@ -166,14 +160,14 @@ const App: React.FC = () => {
                 <Radio value="en">English</Radio>
                 <Radio value="nl">Nederlands</Radio>
               </RadioGroup>
-              <Button size="sm" appearance="primary" onClick={() => setShowApiKeyModal(true)} style={{ marginLeft: 10 }}>
+              <Button size="sm" appearance="primary" onClick={() => setShowApiKeyModal(true)} style={{ marginLeft: 10, marginRight: 10 }}>
                 <Gear style={{ marginRight: 5 }} /> API Key
               </Button>
               <IconButton
+                size="sm"
                 icon={
                   <Icon
                     as={theme === 'light' ? MdOutlineNightlight as any : MdOutlineLightMode as any}
-                    style={{ fontSize: 20 }}
                   />
                 }
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
@@ -228,7 +222,7 @@ const App: React.FC = () => {
 
         <ApiKeyComponent setShow={setShowApiKeyModal} show={showApiKeyModal} userApiKey={userApiKey} setUserApiKey={setUserApiKey} />
       </div>
-    </CustomProvider>
+    </CustomProvider >
   );
 };
 
