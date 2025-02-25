@@ -19,7 +19,7 @@ cohabs-assistant/
 - npm ou yarn
 - Clé API OpenAI
 
-### ⚙️ Installation
+### 🖥️ Lancer le projet en local
 1. Clone le repo :
 ```bash
 git clone [https://github.com/user/repo.git](https://github.com/pierresavary562935/cohabs-assistant.git)
@@ -35,11 +35,11 @@ npm run init
 npm start
 ```
 
-## 🖥️ Lancer le projet en local
+## 🖥️ Lancer le projet en local maunellement
 1. Back-end (API Express ou Node.js) :
 ```bash
 cd back-end
-node index.js
+node index.js ou npm start
 # Serveur sur http://localhost:3000
 ```
 
@@ -47,7 +47,6 @@ node index.js
 ```bash
 cd ../react-frontend
 npm start
-#then type 'y' to accept changing port
 # Application sur http://localhost:3001
 ```
 
@@ -59,10 +58,9 @@ npm start
 
 ## 🛠️ Technologies utilisées
 	•	Front-end : React, TypeScript
-	•	Back-end : Node.js, Express
+	•	Back-end : Express
 	•	API : OpenAI GPT
 	•	HTTP Client : Axios
-	•	Gestion d’état : Context API / Redux (selon ton choix)
 	•	Styles : Tailwind CSS / CSS Modules
 
 ## 🧑‍💻 Auteur
